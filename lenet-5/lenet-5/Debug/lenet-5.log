@@ -1,0 +1,3 @@
+﻿  run.cpp
+C:\Users\dotaofll\source\repos\lenet-5\lenet-5\utils.h(45,53): warning C4244:  “参数”: 从“std::streamoff”转换到“const unsigned int”，可能丢失数据
+  lenet-5.vcxproj -> C:\Users\dotaofll\source\repos\lenet-5\Debug\lenet-5.exe
