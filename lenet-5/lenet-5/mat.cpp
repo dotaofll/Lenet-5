@@ -1,5 +1,5 @@
 #include "mat.h"
-
+#include <algorithm>
 #define ms2M std::make_shared<Mat2D>
 using sp2M = std::shared_ptr<Mat2D>;
 
@@ -19,25 +19,33 @@ vvf Mat2D::rotate180()
 	return this->mat;
 }
 
-vvf Mat2D::correlation(Mat2D &map, Mat2D &input, size_t type = full)
-{
+
+vvf Mat2D::correlation(Mat2D &map, size_t type = full)
+{ //this
 	int halfmapsizew{0};
 	int halfmapsizeh{0};
 	if (map.row % 2 == 0 && map.col % 2 == 0)
 	{
 		halfmapsizeh = map.row / 2;
 		halfmapsizew = map.col / 2;
+		//halfmapsizeh = this->mat.row / 2;
+		//halfmapsizew = this->mat.col / 2;
 	}
 	else
 	{
 		halfmapsizeh = (map.row - 1) / 2;
 		halfmapsizew = (map.col - 1) / 2;
+		//halfmapsizeh = (this->mat.row-1) / 2;
+		//halfmapsizew = (this->mat.col-1) / 2;
 	}
-	size_t outsizew{input.col + map.col - 1};
-	size_t outsizeh{input.row + map.row - 1};
+	size_t outsizew{this->col + map.col - 1};
+	size_t outsizeh{this->row + map.row - 1};
+	//size_t outsizew{input.col+this->mat.col-1};
+	//size_t outsizeh{input.col+this->mat.row-1};
 
 	vvf outputData(outsizeh, std::vector<float>(outsizew, 0.0));
-	vvf exInput = matEdgeExpand(input, map.col - 1, map.row - 1);
+
+	vvf exInput = matEdgeExpand(*this, map.col - 1, map.row - 1);
 
 	for (int i = 0; i < outsizeh; i++)
 	{
@@ -79,11 +87,11 @@ vvf Mat2D::correlation(Mat2D &map, Mat2D &input, size_t type = full)
 	}
 }
 
-vvf Mat2D::cov(Mat2D &map, Mat2D &input, size_t type = full)
+vvf Mat2D::cov(Mat2D &map, size_t type = full)
 {
 	vvf flipmap = rotate180();
 	//map.mat = flipmap;
-	vvf res = correlation(map, input, type);
+	vvf res = correlation(map, type);
 	return res;
 }
 // ����Ǿ�����ϲ�������ֵ�ڲ壩��upc��upr���ڲ屶��
@@ -139,36 +147,31 @@ vvf Mat2D::matEdgeShrink(Mat2D &Mat, size_t shrinkc, size_t shrinkr)
 	return res;
 }
 
-void Mat2D::addmat(vvf &res, Mat2D &Mat1, Mat2D &Mat2)
+void Mat2D::addmat(vvf &res, Mat2D &Mat2)
 {
-	if (Mat1.col != Mat2.col || Mat1.row != Mat2.row)
+	if (this->col != Mat2.col || this->row != Mat2.row)
 	{
 		throw std::runtime_error("Size is not same");
 	}
-	for (int i = 0; i < Mat1.row; i++)
+	for (int i = 0; i < this->row; i++)
 	{
 		for (int j = 0; j < Mat2.col; j++)
 		{
-			res[i][j] = Mat1.mat[i][j] + Mat2.mat[i][j];
+			res[i][j] = this->mat[i][j] + Mat2.mat[i][j];
 		}
 	}
 }
 
-void Mat2D::multifactor(vvf &res, Mat2D &Mat, float factor)
+void Mat2D::multifactor(vvf &res, float factor)
 {
-	for (int i = 0; i < Mat.row; i++)
-	{
-		for (int j = 0; j < Mat.col; j++)
-		{
-			res[i][j] = Mat.mat[i][j] * factor;
-		}
-	}
+	/*transform(this->mat.begin(), this->mat.end(), back_inserter(res),
+	 [&](std::vector<float> f) { std::for_each(f.begin(),end(f),); });*/
 }
 
-float Mat2D::summat(Mat2D &Mat)
+float Mat2D::summat()
 {
 	float sum = 0.0f;
-	for (auto &fv : Mat.mat)
+	for (auto &fv : this->mat)
 	{
 		sum = std::accumulate(fv.begin(), fv.end(), 0.f);
 	}

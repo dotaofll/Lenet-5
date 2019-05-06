@@ -4,12 +4,13 @@
 #include <vector>
 #include <thread>
 #include <numeric>
+#include <algorithm>
 #include <chrono>
 #include "multi_thread.h"
 #include "mnist.h"
 #include "mat.h"
 using namespace std;
-using namespace chrono;
+//using namespace chrono;
 int main()
 {
 	//MnistImg res;
@@ -24,25 +25,9 @@ int main()
 	//	<< double(duration.count()) * microseconds::period::num / microseconds::period::den
 	//	<< "seconds" << endl;
 	//shared_ptr<float**> ptr{ make_shared<>(float**) };
-	Mat2D src{6, 6};
-	Mat2D map{4, 4};
-	mt19937 gen{};
-	normal_distribution<> d(5);
-	for (auto &fv : src.mat)
-	{
-		for (auto &fn : fv)
-		{
-			fn = (float)d(gen);
-		}
-	}
-	for (auto &fv : map.mat)
-	{
-		for (auto &fn : fv)
-		{
-			fn = (float)d(gen);
-		}
-	}
-	vvf ret = src.cov(map, src, 0);
-	cout << d(gen);
+	vector<float> res;
+	Array<float, 2> a1(2,2);
+	Array<float, 2> a0(move(a1));
+	
 	return 0;
 }

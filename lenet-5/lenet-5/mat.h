@@ -25,13 +25,13 @@ class Mat2D
 	~Mat2D() { mat.~vector(); }
 	vvf mat;
 	vvf rotate180();
-	vvf correlation(Mat2D &, Mat2D &, size_t);
-	vvf cov(Mat2D &, Mat2D &, size_t);
+	vvf correlation(Mat2D &, size_t);
+	vvf cov(Mat2D &, size_t);
 	vvf UpSample(Mat2D &, size_t, size_t);
 	vvf matEdgeExpand(Mat2D &, size_t, size_t);
 	vvf matEdgeShrink(Mat2D &, size_t, size_t);
-	void addmat(vvf &, Mat2D &, Mat2D &);
+	void addmat(vvf &, Mat2D &);
 	void savemat(Mat2D &, std::string);
-	void multifactor(vvf &, Mat2D &, float);
-	float summat(Mat2D &);
+	void multifactor(vvf &, float);
+	float summat();
 };
