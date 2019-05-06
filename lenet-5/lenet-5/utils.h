@@ -72,7 +72,7 @@ void load_mnist_data(const string &&file_name, MinstImg &Img){
 #include <fstream>
 #include <vector>
 #include <memory>
-#include<cassert>
+#include <cassert>
 #include "mnist.h"
 
 
@@ -249,6 +249,12 @@ public:
 		}
 	}
 	Array(Array&& rhs) {
+		_values = rhs._values;
+		_dimInfo = rhs._dimInfo;
+		_totalSize = rhs._totalSize;
+		rhs._values = nullptr;
+	}
+	void swap(Array&& rhs) {
 		_values = rhs._values;
 		_dimInfo = rhs._dimInfo;
 		_totalSize = rhs._totalSize;
